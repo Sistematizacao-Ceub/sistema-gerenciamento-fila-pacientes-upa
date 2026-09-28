@@ -4,35 +4,46 @@
 ![Maven](https://img.shields.io/badge/Maven-3.8+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 ![JUnit5](https://img.shields.io/badge/JUnit5-Testing-25A162?style=for-the-badge&logo=junit5&logoColor=white)
 
+**Disciplina:** Programação Orientada a Objetos — UniCEUB
+**Professor:** Prof. Romes Heriberto
+**Turma:** [turma]  |  **Data de entrega:** [dd/mm/aaaa]
+
+---
+
 ## 👥 Integrantes da Equipe
-| Nome Completo | Matrícula |
+
+| Nome Completo | Matrícula
 | :--- | :--- |
-| Rafael | [@Rafael](https://github.com/RafaelRLeite) |
-| Matheus | [@Matheus](https://github.com/matheusbrito090108) |
-| Fernando | [@Fernando](https://github.com/fernandoluca015) |
-| Italo | [@Italo](https://github.com/Italo-917) |
+| Rafael [@Rafael](https://github.com/RafaelRLeite) | 72501342 
+| Matheus [@Matheus](https://github.com/matheusbrito090108) | 72650414
+| Fernando [@Fernando](https://github.com/fernandoluca015) | 72650534
+| Italo [@Italo](https://github.com/Italo-917) | 72650588
 
 ---
 
 ## 📖 Descrição da Aplicação
-Este projeto é um **Sistema de Controle de Fluxo de Atendimento para Unidades de Pronto Atendimento (UPAs)** executado via Interface de Linha de Comando (CLI). O sistema resolve o problema das filas baseadas estritamente em ordem de chegada, implementando o **Protocolo de Manchester Simplificado** para classificar pacientes de acordo com a gravidade dos sinais vitais. 
+
+Este projeto é um **Sistema de Controle de Fluxo de Atendimento para Unidades de Pronto Atendimento (UPAs)** executado via Interface de Linha de Comando (CLI). O sistema resolve o problema das filas baseadas estritamente em ordem de chegada, implementando o **Protocolo de Manchester Simplificado** para classificar pacientes de acordo com a gravidade dos sinais vitais.
 
 O software foi desenvolvido com forte foco em boas práticas de Engenharia de Software, aplicando os pilares da Programação Orientada a Objetos (POO), princípios SOLID, Design Patterns e a implementação manual (from scratch) de Estruturas de Dados e Algoritmos de ordenação e busca.
 
 ### ⚙️ Funcionalidades Implementadas
-* **[RF01] Cadastro de Paciente:** Validação real de CPF (dígitos verificadores) e geração sequencial de senhas (Ex: P001).
-* **[RF02] Triagem Clínica:** Leitura de sinais vitais, validação de regras de negócio e classificação de risco (Vermelho, Laranja, Amarelo, Verde, Azul).
-* **[RF03] Painel de Chamada:** Atendimento baseado em prioridade clínica e ordem de chegada.
-* **[RF04] Visualização de Filas:** Exibição da fila de triagem (FIFO) e da fila de atendimento (Priority Queue).
-* **[RF05] Busca de Pacientes:** Localização O(log n) por senha utilizando Busca Binária.
-* **[RF06] Relatórios Históricos:** Pilha de últimos atendimentos e listagem por tempo de espera via Merge Sort.
-* **[RF07] Estatísticas do Plantão:** Dashboard CLI com contagem por cores e tempo médio de espera.
+
+- [ ] RF01 — Cadastro de paciente com validação de CPF e geração de senha
+- [ ] RF02 — Triagem com classificação de risco (5 cores)
+- [ ] RF03 — Chamada do próximo paciente por prioridade, com painel de chamada
+- [ ] RF04 — Visualização das filas de triagem e de atendimento
+- [ ] RF05 — Busca de paciente por CPF e por senha (busca binária)
+- [ ] RF06 — Relatórios: últimos atendimentos (pilha) e ordenado por espera (merge sort)
+- [ ] RF07 — Estatísticas do plantão
+- [ ] Bônus: 
 
 ---
 
 ## 🛠️ Tecnologias e Requisitos
-* **Linguagem:** Java 17 ou superior.
-* **Gerenciador de Dependências:** Maven.
+
+* **Linguagem:** Java 17 ou superior (verifique com `java -version` e `javac -version`).
+* **Gerenciador de Dependências:** Maven 3.8+ (opcional — só necessário para rodar os testes e gerar o `.jar`).
 * **Testes:** JUnit 5.
 * **Interface:** Terminal (CLI) — Sem dependências de frameworks gráficos.
 
@@ -40,7 +51,7 @@ O software foi desenvolvido com forte foco em boas práticas de Engenharia de So
 
 ## 🎯 Etapas de Desenvolvimento
 
-O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o escopo do projeto[cite: 3]. As tarefas podem ser divididas e acompanhadas pela equipe marcando as caixas abaixo:
+O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o escopo do projeto. As tarefas podem ser divididas e acompanhadas pela equipe marcando as caixas abaixo:
 
 - [ ] **ETAPA 0 — Preparar o ambiente e conhecer o projeto:** Instalação do JDK 17+, configuração da IDE, execução do esqueleto inicial com Maven e divisão das tarefas entre o grupo.
 - [ ] **ETAPA 1 — Validar CPF (util/ValidadorCpf.isValido()):** Implementação do algoritmo matemático de validação dos dígitos verificadores do CPF.
@@ -52,7 +63,6 @@ O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o 
 - [ ] **ETAPA 7 — Interface de linha de comando (cli/MenuCli):** Desenvolvimento das interações e telas do terminal (opções 2, 3, 5, 6 e 7), garantindo a robustez do programa contra entradas inválidas de dados.
 - [ ] **ETAPA 8 — Escrever os testes do grupo (mínimo 8 novos):** Criação de novos testes unitários com JUnit 5 (padrão Arrange-Act-Assert) para atingir os requisitos de qualidade e complementar os 33 testes já fornecidos.
 - [ ] **ETAPA 9 — Documentar e empacotar:** Preenchimento do `README.md`, exclusão de pastas de compilação (`target/`, `.class`), validação final em pasta limpa e empacotamento do projeto em `.zip`.
-
 ---
 
 ## 🖼️ Arquitetura e Representações Visuais
@@ -109,10 +119,65 @@ O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o 
   MenuCli ──usa──► UpaService ──usa──► ClassificadorRisco, PacienteRepository,
                                        Fila, FilaPrioridade, Pilha, ObservadorChamada
 ```
+---
 
-## 🚀 Como Executar o Projeto Localmente
+## 📦 Instalação e Configuração Local
 
-### 1. Clonar o Repositório
+### 1. Clonar o Repositório e Entrar na Pasta
 ```bash
 git clone [https://github.com/Sistematizacao-Ceub/sistema-gerenciamento-fila-pacientes-upa.git](https://github.com/Sistematizacao-Ceub/sistema-gerenciamento-fila-pacientes-upa.git)
 cd sistema-gerenciamento-fila-pacientes-upa
+```
+```bash
+# 1. Descompacte o arquivo .zip
+# 2. Entre na pasta do projeto
+cd sistema-gerenciamento-fila-pacientes-upa
+```
+
+---
+
+## ▶️ Como executar
+
+**Opção A — sem Maven (só JDK):**
+
+```bash
+# Windows: dê dois cliques em executar.bat  (ou rode no terminal:)
+executar.bat
+
+# Linux / macOS:
+./executar.sh
+```
+
+**Opção B — com Maven:**
+
+```bash
+mvn compile exec:java
+```
+
+**Opção C — gerar e rodar o .jar:**
+
+```bash
+mvn package
+java -jar target/upa-fila-1.0.jar
+```
+
+---
+
+## 🧪 Como rodar os testes
+
+```bash
+mvn test
+```
+
+---
+
+## 🎬 Roteiro de demonstração
+
+1. Opção 1 → cadastre "Ana", CPF `529.982.247-25`
+2. Opção 1 → cadastre "Bruno", CPF `111.444.777-35`
+3. Opção 2 → triagem da Ana com sinais normais → **AZUL**
+4. Opção 2 → triagem do Bruno com SpO2 = 85 → **VERMELHO**
+5. Opção 4 → Bruno aparece **na frente** da Ana, mesmo tendo chegado depois
+6. Opção 3 → chama o Bruno; o painel mostra a senha e o consultório
+
+---
