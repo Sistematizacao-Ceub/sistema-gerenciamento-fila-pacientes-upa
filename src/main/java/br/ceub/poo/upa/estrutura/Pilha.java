@@ -1,5 +1,8 @@
 package br.ceub.poo.upa.estrutura;
 
+import br.ceub.poo.upa.excecao.FilaVaziaException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,38 +20,49 @@ import java.util.List;
  */
 public class Pilha<T> implements Colecao<T> {
 
-    // TODO: atributos (referência para o topo e contador de tamanho)
+    private No<T> topo;
+    private int tamanho;
 
     public void empilhar(T valor) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Pilha.empilhar()");
+        No<T> novo = new No<>(valor);
+        novo.proximo = topo;
+        topo = novo;
+        tamanho++;
     }
 
     public T desempilhar() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Pilha.desempilhar()");
+        if (estaVazia()) {
+            throw new FilaVaziaException("A pilha está vazia");
+        }
+        T valor = topo.valor;
+        topo = topo.proximo;
+        tamanho--;
+        return valor;
     }
 
     public T topo() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Pilha.topo()");
+        if (estaVazia()) {
+            throw new FilaVaziaException("A pilha está vazia");
+        }
+        return topo.valor;
     }
 
     @Override
     public int tamanho() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Pilha.tamanho()");
+        return tamanho;
     }
 
     @Override
     public boolean estaVazia() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Pilha.estaVazia()");
+        return tamanho == 0;
     }
 
     @Override
     public List<T> paraLista() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Pilha.paraLista()");
+        ArrayList<T> lista = new ArrayList<>();
+        for(No<T> atual = topo; atual != null; atual = atual.proximo ) {
+            lista.add(atual.valor);
+        }
+        return lista;
     }
 }
