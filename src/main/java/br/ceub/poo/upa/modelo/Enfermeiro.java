@@ -18,7 +18,6 @@ public class Enfermeiro extends Profissional {
 
     @Override
     public String getIdentificacao() {
-        // TODO: implementar conforme o comentário da classe
-        throw new UnsupportedOperationException("TODO: Enfermeiro.getIdentificacao()");
+        return String.format("Enf. %s - %s", getNome(), getRegistroConselho());
     }
 }

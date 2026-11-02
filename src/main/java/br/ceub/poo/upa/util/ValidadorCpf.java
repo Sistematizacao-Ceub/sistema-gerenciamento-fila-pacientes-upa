@@ -40,7 +40,27 @@ public final class ValidadorCpf {
      *  Exemplo válido para testar: 529.982.247-25
      */
     public static boolean isValido(String cpf) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: ValidadorCpf.isValido()");
+        String cpfNormalizado = normalizar(cpf);
+        if (cpfNormalizado.length() != 11) return  false;
+        if (todosDigitosIguais(cpfNormalizado)) return  false;
+        if (calcularDigitoVerificador(cpfNormalizado, 9) != Character.getNumericValue(cpfNormalizado.charAt(9))
+                || calcularDigitoVerificador(cpfNormalizado, 10) != Character.getNumericValue(cpfNormalizado.charAt(10)))
+            return  false;
+        return true;
+    }
+
+    private static boolean todosDigitosIguais(String cpfNormalizado) {
+        return cpfNormalizado.chars().distinct().count() == 1;
+    }
+
+    private static int calcularDigitoVerificador(String cpfNormalizado, int tamanhoDigitos) {
+        int soma = 0;
+        int pesoInicial = tamanhoDigitos + 1;
+        for (int i = 0; i < tamanhoDigitos; i++) {
+            int digito = Character.getNumericValue(cpfNormalizado.charAt(i));
+            soma += digito * (pesoInicial - i);
+        }
+        int resto = soma % 11;
+        return (resto < 2) ? 0 : (11 - resto);
     }
 }

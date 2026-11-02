@@ -30,14 +30,14 @@ public class Atendimento {
      * Dica: Duration.between(inicio, fim).toMinutes()
      */
     public long getTempoEsperaMin() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Atendimento.getTempoEsperaMin()");
+        if (getPaciente() == null || getPaciente().getHorarioChegada() == null) return 0;
+        return Duration.between(getPaciente().getHorarioChegada(), getHorarioChamada()).toMinutes();
     }
 
     /** true se o tempo de espera NÃO ultrapassou o tempo máximo da prioridade do paciente. */
     public boolean isDentroDoPrazo() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Atendimento.isDentroDoPrazo()");
+        if (getPaciente() == null || getPaciente().getPrioridade() == null) return false;
+        return getTempoEsperaMin() <= getPaciente().getPrioridade().getTempoMaximoEsperaMin();
     }
 
     @Override

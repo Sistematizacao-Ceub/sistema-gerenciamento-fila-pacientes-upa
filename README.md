@@ -53,11 +53,11 @@ O software foi desenvolvido com forte foco em boas práticas de Engenharia de So
 
 O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o escopo do projeto. As tarefas podem ser divididas e acompanhadas pela equipe marcando as caixas abaixo:
 
-- [ ] **ETAPA 0 — Preparar o ambiente e conhecer o projeto:** Instalação do JDK 17+, configuração da IDE, execução do esqueleto inicial com Maven e divisão das tarefas entre o grupo.
-- [ ] **ETAPA 1 — Validar CPF (util/ValidadorCpf.isValido()):** Implementação do algoritmo matemático de validação dos dígitos verificadores do CPF.
-- [ ] **ETAPA 2 — Estudar as classes prontas:** Leitura e compreensão do código fornecido, focando em herança, composição e na classe genérica `Fila<T>` (FIFO).
-- [ ] **ETAPA 3 — Completar o modelo (herança, encapsulamento e polimorfismo):** Codificação do interior das classes `Enfermeiro`, `Medico`, `Paciente` e `Atendimento`, implementando métodos como `getIdentificacao()` e formatação de senhas.
-- [ ] **ETAPA 4 — Classificação de risco, ordem da fila e estruturas de dados:** Implementação do `ClassificadorManchesterSimplificado` com a cadeia de regras clínicas, ordenação `compareTo()` do Paciente, e construção das estruturas `FilaPrioridade<T>` e `Pilha<T>`.
+- [x] **ETAPA 0 — Preparar o ambiente e conhecer o projeto:** Instalação do JDK 17+, configuração da IDE, execução do esqueleto inicial com Maven e divisão das tarefas entre o grupo.
+- [x] **ETAPA 1 — Validar CPF (util/ValidadorCpf.isValido()):** Implementação do algoritmo matemático de validação dos dígitos verificadores do CPF.
+- [x] **ETAPA 2 — Estudar as classes prontas:** Leitura e compreensão do código fornecido, focando em herança, composição e na classe genérica `Fila<T>` (FIFO).
+- [x] **ETAPA 3 — Completar o modelo (herança, encapsulamento e polimorfismo):** Codificação do interior das classes `Enfermeiro`, `Medico`, `Paciente` e `Atendimento`, implementando métodos como `getIdentificacao()` e formatação de senhas.
+- [x] **ETAPA 4 — Classificação de risco, ordem da fila e estruturas de dados:** Implementação do `ClassificadorManchesterSimplificado` com a cadeia de regras clínicas, ordenação `compareTo()` do Paciente, e construção das estruturas `FilaPrioridade<T>` e `Pilha<T>`.
 - [ ] **ETAPA 5 — Exceções, validações e algoritmos recursivos:** Codificação de exceções customizadas (`PacienteNaoEncontradoException`), regras de `SinaisVitais`, e implementação dos algoritmos recursivos `Busca.buscaBinariaRecursiva()` e `Ordenacao.mergeSort()`.
 - [ ] **ETAPA 6 — Regras de negócio (servico/UpaService):** Orquestração do sistema integrando o cadastro, triagem, chamadas médicas e geração de relatórios estatísticos, respeitando o Princípio de Responsabilidade Única (SRP) sem uso de saídas no console.
 - [ ] **ETAPA 7 — Interface de linha de comando (cli/MenuCli):** Desenvolvimento das interações e telas do terminal (opções 2, 3, 5, 6 e 7), garantindo a robustez do programa contra entradas inválidas de dados.
