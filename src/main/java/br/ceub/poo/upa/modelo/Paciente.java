@@ -93,7 +93,15 @@ public class Paciente extends Pessoa implements Comparable<Paciente> {
      */
     @Override
     public int compareTo(Paciente outro) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Paciente.compareTo()");
+        if (getPrioridade() == null || outro.getPrioridade() == null) {
+            throw new IllegalStateException("N\u00E3o \u00E9 poss\u00EDvel comparar pacientes sem triagem.");
+        }
+        int comparacaoPrioridade = getPrioridade().compareTo(outro.getPrioridade());
+        int comparacaoHorario = horarioChegada.compareTo(outro.horarioChegada);
+        return comparacaoPrioridade != 0
+                ? comparacaoPrioridade
+                : comparacaoHorario != 0
+                ? comparacaoHorario
+                : Integer.compare(getSenha(), outro.getSenha());
     }
 }

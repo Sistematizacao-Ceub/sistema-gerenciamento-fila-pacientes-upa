@@ -26,8 +26,22 @@ public class ClassificadorManchesterSimplificado implements ClassificadorRisco {
 
     @Override
     public Prioridade classificar(SinaisVitais sinais) {
-        // TODO: implementar as regras (if / else if ... return)
-        throw new UnsupportedOperationException("TODO: ClassificadorManchesterSimplificado.classificar()");
+        if (!sinais.isConsciente() || sinais.getSaturacaoO2() < 90 || sinais.getFrequenciaCardiaca() < 40
+                || sinais.getFrequenciaCardiaca() > 150 || sinais.getPressaoSistolica() < 80) {
+            return Prioridade.VERMELHO;
+        }
+        if (sinais.getSaturacaoO2() <= 93 || sinais.getTemperatura() >= 40.0 || sinais.getDor() >= 8
+                || sinais.getFrequenciaCardiaca() > 130 || sinais.getPressaoSistolica() >= 180) {
+            return Prioridade.LARANJA;
+        }
+        if (sinais.getTemperatura() >= 38.5 || sinais.getDor() >= 5 || sinais.getFrequenciaCardiaca() > 110
+                || sinais.getPressaoSistolica() >= 160) {
+            return Prioridade.AMARELO;
+        }
+        if (sinais.getTemperatura() >= 37.8 || sinais.getDor() >= 1) {
+            return Prioridade.VERDE;
+        }
+        return Prioridade.AZUL;
     }
 
     @Override
