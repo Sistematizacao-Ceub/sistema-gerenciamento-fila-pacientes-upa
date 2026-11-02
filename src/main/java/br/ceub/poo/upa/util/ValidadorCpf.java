@@ -1,7 +1,5 @@
 package br.ceub.poo.upa.util;
 
-import br.ceub.poo.upa.excecao.CpfInvalidoException;
-
 /**
  * Validação de CPF pelos DÍGITOS VERIFICADORES (algoritmo oficial da Receita Federal).
  *

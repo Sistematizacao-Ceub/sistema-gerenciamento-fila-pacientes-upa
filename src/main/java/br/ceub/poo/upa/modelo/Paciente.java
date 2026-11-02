@@ -39,8 +39,7 @@ public class Paciente extends Pessoa implements Comparable<Paciente> {
      * Dica: String.format("P%03d", senha)
      */
     public String getSenhaFormatada() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Paciente.getSenhaFormatada()");
+        return String.format("P%03d", senha);
     }
 
     /**
@@ -49,8 +48,11 @@ public class Paciente extends Pessoa implements Comparable<Paciente> {
      *        caso contrário lance IllegalStateException("Paciente já foi triado").
      */
     public void registrarTriagem(Triagem triagem) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Paciente.registrarTriagem()");
+        if (this.status != StatusPaciente.AGUARDANDO_TRIAGEM) {
+            throw new IllegalStateException("Paciente j\u00E1 foi triado");
+        }
+        this.triagem = triagem;
+        this.status = StatusPaciente.AGUARDANDO_ATENDIMENTO;
     }
 
     /**
@@ -59,21 +61,21 @@ public class Paciente extends Pessoa implements Comparable<Paciente> {
      *        caso contrário lance IllegalStateException.
      */
     public void marcarComoAtendido() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Paciente.marcarComoAtendido()");
+        if (this.status != StatusPaciente.AGUARDANDO_ATENDIMENTO) {
+            throw new IllegalStateException("Paciente n\u00E3o est\u00E1 aguardando atendimento.");
+        }
+        this.status = StatusPaciente.ATENDIDO;
     }
 
     /** Prioridade da triagem, ou null se ainda não foi triado. */
     public Prioridade getPrioridade() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Paciente.getPrioridade()");
+        return getTriagem() == null ? null : getTriagem().getPrioridade();
     }
 
     /** Formato: "Paciente <nome> (senha P007)". */
     @Override
     public String getIdentificacao() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Paciente.getIdentificacao()");
+        return String.format("Paciente %s (senha %s)", getNome(), getSenhaFormatada());
     }
 
     /**
