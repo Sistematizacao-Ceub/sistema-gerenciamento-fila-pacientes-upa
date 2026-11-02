@@ -14,21 +14,19 @@ import java.time.LocalDate;
  */
 public class Medico extends Profissional {
 
-    // TODO: atributo consultorio
+    private final int consultorio;
 
     public Medico(String nome, String cpf, LocalDate dataNascimento, String crm, int consultorio) {
         super(nome, cpf, dataNascimento, crm);
-        // TODO: guardar o consultório
+        this.consultorio = consultorio;
     }
 
     public int getConsultorio() {
-        // TODO: retornar o atributo
-        throw new UnsupportedOperationException("TODO: Medico.getConsultorio()");
+        return consultorio;
     }
 
     @Override
     public String getIdentificacao() {
-        // TODO: implementar conforme o comentário da classe
-        throw new UnsupportedOperationException("TODO: Medico.getIdentificacao()");
+        return String.format("Dr(a). %s - %s (Consultório %d)", getNome(), getRegistroConselho(), getConsultorio());
     }
 }
