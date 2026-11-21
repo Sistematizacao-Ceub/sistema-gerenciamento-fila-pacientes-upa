@@ -30,7 +30,7 @@ public class Atendimento {
      * Dica: Duration.between(inicio, fim).toMinutes()
      */
     public long getTempoEsperaMin() {
-        if (getPaciente() == null || getPaciente().getHorarioChegada() == null) return 0;
+        if (getPaciente() == null || getPaciente().getHorarioChegada() == null || getHorarioChamada() == null) return 0;
         return Duration.between(getPaciente().getHorarioChegada(), getHorarioChamada()).toMinutes();
     }
 

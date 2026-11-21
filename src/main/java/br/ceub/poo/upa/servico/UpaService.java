@@ -6,6 +6,7 @@ import br.ceub.poo.upa.estrutura.Fila;
 import br.ceub.poo.upa.estrutura.FilaPrioridade;
 import br.ceub.poo.upa.estrutura.Pilha;
 import br.ceub.poo.upa.excecao.CpfInvalidoException;
+import br.ceub.poo.upa.excecao.MedicoNaoInformadoException;
 import br.ceub.poo.upa.excecao.PacienteDuplicadoException;
 import br.ceub.poo.upa.excecao.PacienteNaoEncontradoException;
 import br.ceub.poo.upa.modelo.Atendimento;
@@ -30,6 +31,7 @@ import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * CORAÇÃO DO SISTEMA: regras de negócio do fluxo da UPA.
@@ -74,10 +76,15 @@ public class UpaService {
      *  5. repositorio.salvar(...) e filaTriagem.enfileirar(...)
      *  6. Retorne o paciente criado.
      */
-    public Paciente cadastrarPaciente(String nome, String cpf, LocalDate dataNascimento)
-            throws CpfInvalidoException, PacienteDuplicadoException {
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.cadastrarPaciente()");
+    public Paciente cadastrarPaciente(String nome, String cpf, LocalDate dataNascimento) throws CpfInvalidoException, PacienteDuplicadoException {
+        if(!ValidadorCpf.isValido(cpf)) throw new CpfInvalidoException(cpf);
+        String cpfNormalizado = ValidadorCpf.normalizar(cpf);
+        Optional<Paciente> paciente = repositorio.buscarPorCpf(cpfNormalizado);
+        if (paciente.isPresent() && paciente.get().getStatus() != StatusPaciente.ATENDIDO) { throw new PacienteDuplicadoException(cpfNormalizado);}
+        Paciente pacienteNovo = new Paciente(nome, cpfNormalizado, dataNascimento, geradorSenha.proxima(), LocalDateTime.now(relogio));
+        repositorio.salvar(pacienteNovo);
+        filaTriagem.enfileirar(pacienteNovo);
+        return pacienteNovo;
     }
 
     // ================================================================ RF02 — TRIAGEM
@@ -100,8 +107,11 @@ public class UpaService {
      *  ATENÇÃO: classifique ANTES de desenfileirar — se algo falhar, o paciente não "some" da fila.
      */
     public Triagem triarProximo(Enfermeiro enfermeiro, SinaisVitais sinais, String queixa) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.triarProximo()");
+        Triagem triagem = new Triagem(enfermeiro, sinais, classificador.classificar(sinais), queixa, LocalDateTime.now(relogio));
+        Paciente paciente = filaTriagem.desenfileirar();
+        paciente.registrarTriagem(triagem);
+        filaAtendimento.enfileirar(paciente);
+        return triagem;
     }
 
     // ================================================================ RF03 — CHAMADA
@@ -117,9 +127,14 @@ public class UpaService {
      *  5. Avise TODOS os observadores: for (ObservadorChamada o : observadores) o.aoChamarPaciente(atendimento);
      *  6. return atendimento
      */
-    public Atendimento chamarProximo(Medico medico) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.chamarProximo()");
+    public Atendimento chamarProximo(Medico medico) throws MedicoNaoInformadoException {
+        if (medico == null) { throw new MedicoNaoInformadoException(); }
+        Paciente paciente = filaAtendimento.desenfileirar();
+        paciente.marcarComoAtendido();
+        Atendimento atendimento = new Atendimento(paciente, medico, LocalDateTime.now(relogio));
+        historico.empilhar(atendimento);
+        observadores.forEach(o -> o.aoChamarPaciente(atendimento));
+        return atendimento;
     }
 
     public void adicionarObservador(ObservadorChamada observador) {
@@ -155,8 +170,10 @@ public class UpaService {
      *  4. return todos.get(indice)
      */
     public Paciente buscarPorSenha(int senha) throws PacienteNaoEncontradoException {
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.buscarPorSenha()");
+        List<Paciente> pacientes = repositorio.listarTodos();
+        int indice = Busca.buscaBinaria(pacientes, senha, Paciente::getSenha);
+        if (indice < 0) throw new PacienteNaoEncontradoException("senha: " + senha);
+        return pacientes.get(indice);
     }
 
     // ================================================================ RF06 — RELATÓRIOS
@@ -174,8 +191,7 @@ public class UpaService {
      *   Comparator.comparingLong(Atendimento::getTempoEsperaMin).reversed()
      */
     public List<Atendimento> relatorioPorTempoEspera() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.relatorioPorTempoEspera()");
+        return Ordenacao.mergeSort(historico.paraLista(), Comparator.comparingLong(Atendimento::getTempoEsperaMin).reversed());
     }
 
     // ================================================================ RF07 — ESTATÍSTICAS
@@ -189,8 +205,17 @@ public class UpaService {
      */
     public Map<Prioridade, Integer> contarPorPrioridade() {
         Map<Prioridade, Integer> contagem = new EnumMap<>(Prioridade.class);
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.contarPorPrioridade()");
+        for (Prioridade value : Prioridade.values()) {
+            contagem.put(value, 0);
+        }
+        repositorio.listarTodos()
+                .stream()
+                .filter(p -> p.getPrioridade() != null)
+                .forEach(p -> {
+                            contagem.put(p.getPrioridade(), contagem.merge(p.getPrioridade(), 1, Integer::sum));
+                        }
+                );
+        return contagem;
     }
 
     /**
@@ -198,8 +223,10 @@ public class UpaService {
      * TODO [Etapa 6]
      */
     public double tempoMedioEsperaMin() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: UpaService.tempoMedioEsperaMin()");
+        return historico.paraLista().stream()
+                .mapToLong(Atendimento::getTempoEsperaMin)
+                .average()
+                .orElse(0.0);
     }
 
     public String getNomeProtocolo() {
