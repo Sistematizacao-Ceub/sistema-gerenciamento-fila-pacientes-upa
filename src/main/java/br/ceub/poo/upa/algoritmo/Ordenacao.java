@@ -31,8 +31,13 @@ public final class Ordenacao {
      *   Dica: new ArrayList<>(lista.subList(a, b))
      */
     public static <T> List<T> mergeSort(List<T> lista, Comparator<? super T> comparador) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Ordenacao.mergeSort()");
+        if (lista.size() <= 1) return lista;
+        List<T> copia = new ArrayList<>(lista);
+        int meio = copia.size() / 2;
+        List<T> esquerdaOrdenada = mergeSort(copia.subList(0, meio), comparador);
+        List<T> direitaOrdenada = mergeSort(copia.subList(meio, copia.size()), comparador);
+        return intercalar(esquerdaOrdenada, direitaOrdenada, comparador);
+
     }
 
     /**
@@ -44,8 +49,22 @@ public final class Ordenacao {
      */
     static <T> List<T> intercalar(List<T> esquerda, List<T> direita, Comparator<? super T> comparador) {
         List<T> resultado = new ArrayList<>(esquerda.size() + direita.size());
-        // TODO
-        throw new UnsupportedOperationException("TODO: Ordenacao.intercalar()");
+        int i = 0;
+        int j = 0;
+        while (i < esquerda.size() && j < direita.size()) {
+            if (comparador.compare(esquerda.get(i), direita.get(j)) <= 0) {
+                resultado.add(esquerda.get(i++));
+            } else {
+                resultado.add(direita.get(j++));
+            }
+        }
+        while (i < esquerda.size()) {
+            resultado.add(esquerda.get(i++));
+        }
+        while (j < direita.size()) {
+            resultado.add(direita.get(j++));
+        }
+        return resultado;
     }
 
     /**
