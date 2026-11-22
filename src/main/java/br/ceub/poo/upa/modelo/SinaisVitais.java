@@ -87,6 +87,6 @@ public class SinaisVitais {
     public String toString() {
         return String.format("T=%.1f°C | FC=%d bpm | PA=%d/%d mmHg | SpO2=%d%% | Dor=%d/10 | %s",
                 temperatura, frequenciaCardiaca, pressaoSistolica, pressaoDiastolica,
-                saturacaoO2, dor, consciente ? "consciente" : "INCONSCIENTE");
+                saturacaoO2, dor, consciente ? "Consciente" : "Inconsciente");
     }
 }
