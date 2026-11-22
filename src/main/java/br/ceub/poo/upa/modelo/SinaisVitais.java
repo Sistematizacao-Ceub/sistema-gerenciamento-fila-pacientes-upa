@@ -65,6 +65,10 @@ public class SinaisVitais {
             throw new SinaisVitaisInvalidosException(
                     "Pressão Diastólica fora da faixa (20-200 mmHg): " + pressaoDiastolica);
         }
+        if (pressaoDiastolica >= pressaoSistolica) {
+            throw new SinaisVitaisInvalidosException(
+                    "Pressão Diastólica deve ser menor que a Sistólica: " + pressaoSistolica + "/" + pressaoDiastolica);
+        }
         if (saturacaoO2 < 50 || saturacaoO2 > 100) {
             throw new SinaisVitaisInvalidosException(
                     "Saturação O2 fora da faixa (50-100 % ): " + saturacaoO2);
