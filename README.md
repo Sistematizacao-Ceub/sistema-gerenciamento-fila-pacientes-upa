@@ -12,12 +12,12 @@
 
 ## 👥 Integrantes da Equipe
 
-| Nome Completo | Matrícula
-| :--- | :--- |
-| Rafael [@Rafael](https://github.com/RafaelRLeite) | 72501342 
-| Matheus [@Matheus](https://github.com/matheusbrito090108) | 72650414
-| Fernando [@Fernando](https://github.com/fernandoluca015) | 72650534
-| Italo [@Italo](https://github.com/Italo-917) | 72650588
+| Nome Completo | Matrícula | Principais Contribuições |
+| :--- | :--- | :--- |
+| Rafael [@Rafael](https://github.com/RafaelRLeite) | 72501342 | Estruturas de dados (`FilaPrioridade`, `Pilha`), Algoritmos (`Ordenacao.mergeSort`), Testes unitários |
+| Matheus [@Matheus](https://github.com/matheusbrito090108) | 72650414 | Modelagem de domínio (`Paciente`, `Atendimento`), Algoritmo de Busca Binária recursiva, Regras de negócio |
+| Fernando [@Fernando](https://github.com/fernandoluca015) | 72650534 | Triagem Manchester (`ClassificadorManchesterSimplificado`), Validação matemática de CPF, Exceções personalizadas |
+| Italo [@Italo](https://github.com/Italo-917) | 72650588 | Interface CLI (`MenuCli`), Camada de Serviço (`UpaService`), Padrão Observer (`PainelChamada`), Documentação e empacotamento |
 
 ---
 
@@ -29,14 +29,34 @@ O software foi desenvolvido com forte foco em boas práticas de Engenharia de So
 
 ### ⚙️ Funcionalidades Implementadas
 
-- [ ] RF01 — Cadastro de paciente com validação de CPF e geração de senha
-- [ ] RF02 — Triagem com classificação de risco (5 cores)
-- [ ] RF03 — Chamada do próximo paciente por prioridade, com painel de chamada
-- [ ] RF04 — Visualização das filas de triagem e de atendimento
-- [ ] RF05 — Busca de paciente por CPF e por senha (busca binária)
-- [ ] RF06 — Relatórios: últimos atendimentos (pilha) e ordenado por espera (merge sort)
-- [ ] RF07 — Estatísticas do plantão
-- [ ] Bônus: 
+- [X] RF01 — Cadastro de paciente com validação de CPF e geração de senha
+- [X] RF02 — Triagem com classificação de risco (5 cores)
+- [X] RF03 — Chamada do próximo paciente por prioridade, com painel de chamada
+- [X] RF04 — Visualização das filas de triagem e de atendimento
+- [X] RF05 — Busca de paciente por CPF e por senha (busca binária)
+- [X] RF06 — Relatórios: últimos atendimentos (pilha) e ordenado por espera (merge sort)
+- [X] RF07 — Estatísticas do plantão
+- [X] Bônus: 
+
+---
+
+## 🧩 Conceitos de POO Aplicados
+
+A tabela abaixo detalha onde cada conceito fundamental de POO, estruturas de dados e boas práticas foi aplicado no código-fonte:
+
+| Conceito | Classe(s) Principal(is) | Método / Trecho Relevante | Explicação / Justificativa |
+| :--- | :--- | :--- | :--- |
+| **Encapsulamento** | `Paciente`, `Pessoa`, `SinaisVitais` | Getters/Setters e regras em `registrarTriagem()`, validações no construtor de `SinaisVitais` | Atributos privados e métodos públicos protegendo o estado dos objetos contra modificações inconsistentes. |
+| **Herança** | `Pessoa` $\rightarrow$ `Profissional` $\rightarrow$ `Medico`, `Enfermeiro`; `Pessoa` $\rightarrow$ `Paciente` | `extends Pessoa`, `extends Profissional` | Reutilização de atributos base (`nome`, `cpf`, `dataNascimento`) e especialização de comportamentos específicos. |
+| **Classe Abstrata** | `Pessoa`, `Profissional` | `public abstract String getIdentificacao();` | Classes que não podem ser instanciadas diretamente e definem contratos comuns para subclasses concretas. |
+| **Interface** | `Colecao<T>`, `ClassificadorRisco`, `ObservadorChamada`, `PacienteRepository` | `enfileirar()`, `desenfileirar()`, `classificar()`, `notificarChamada()`, `salvar()` | Desacoplamento entre contratos e implementações concretas, permitindo extensibilidade e inversão de dependência. |
+| **Polimorfismo** | `Paciente`, `Medico`, `Enfermeiro`, `PainelChamada` | `@Override public String getIdentificacao()`, `@Override public void notificarChamada(...)` | Sobrescrita de métodos com comportamentos específicos conforme a instância em tempo de execução. |
+| **Composição** | `Paciente`, `Triagem`, `Atendimento` | `Paciente` contém `Triagem`; `Triagem` contém `SinaisVitais`, `Enfermeiro`, `Prioridade`; `Atendimento` contém `Paciente`, `Medico` | Modelagem "tem-um" estruturando os relacionamentos clínicos essenciais do sistema. |
+| **Exceções Personalizadas** | `UpaException`, `CpfInvalidoException`, `FilaVaziaException`, `PacienteNaoEncontradoException`, `PacienteDuplicadoException`, `SinaisVitaisInvalidosException`, `MedicoNaoInformadoException` | `throw new CpfInvalidoException(...)`, `throw new MedicoNaoInformadoException()` | Hierarquia de exceções de domínio checadas/não checadas derivadas de `UpaException`, garantindo clareza e robustez. |
+| **Recursão** | `Busca`, `Ordenacao` | `Busca.buscaBinariaRecursiva(...)`, `Ordenacao.mergeSort(...)` | Algoritmos de divisão e conquista implementados de forma recursiva sem laços iterativos diretos. |
+| **Estruturas de Dados** | `No<T>`, `Fila<T>`, `FilaPrioridade<T>`, `Pilha<T>` | `enfileirar()`, `desenfileirar()`, `empilhar()`, `desempilhar()` | Estruturas de dados dinâmicas encadeadas implementadas do zero (*from scratch*) sem usar `java.util.Queue` ou `Stack`. |
+| **Padrões de Projeto** | `ClassificadorManchesterSimplificado`, `PainelChamada`, `PacienteRepositoryMemoria` | `ClassificadorRisco` (Strategy), `ObservadorChamada` (Observer), `PacienteRepository` (Repository) | Padrões de projeto clássicos aplicados para desacoplamento de algoritmos clínicos, notificações de chamada e persistência. |
+| **Princípios SOLID** | `ValidadorCpf`, `UpaService`, `Colecao<T>`, `ClassificadorRisco` | Métodos focados em SRP, OCP, LSP, ISP e DIP em toda a camada de serviço e utilitários | **SRP:** `ValidadorCpf` e `UpaService` com responsabilidades únicas; **OCP/DIP:** `UpaService` depende apenas de interfaces. |
 
 ---
 
@@ -58,44 +78,79 @@ O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o 
 - [x] **ETAPA 2 — Estudar as classes prontas:** Leitura e compreensão do código fornecido, focando em herança, composição e na classe genérica `Fila<T>` (FIFO).
 - [x] **ETAPA 3 — Completar o modelo (herança, encapsulamento e polimorfismo):** Codificação do interior das classes `Enfermeiro`, `Medico`, `Paciente` e `Atendimento`, implementando métodos como `getIdentificacao()` e formatação de senhas.
 - [x] **ETAPA 4 — Classificação de risco, ordem da fila e estruturas de dados:** Implementação do `ClassificadorManchesterSimplificado` com a cadeia de regras clínicas, ordenação `compareTo()` do Paciente, e construção das estruturas `FilaPrioridade<T>` e `Pilha<T>`.
-- [ ] **ETAPA 5 — Exceções, validações e algoritmos recursivos:** Codificação de exceções customizadas (`PacienteNaoEncontradoException`), regras de `SinaisVitais`, e implementação dos algoritmos recursivos `Busca.buscaBinariaRecursiva()` e `Ordenacao.mergeSort()`.
-- [ ] **ETAPA 6 — Regras de negócio (servico/UpaService):** Orquestração do sistema integrando o cadastro, triagem, chamadas médicas e geração de relatórios estatísticos, respeitando o Princípio de Responsabilidade Única (SRP) sem uso de saídas no console.
-- [ ] **ETAPA 7 — Interface de linha de comando (cli/MenuCli):** Desenvolvimento das interações e telas do terminal (opções 2, 3, 5, 6 e 7), garantindo a robustez do programa contra entradas inválidas de dados.
-- [ ] **ETAPA 8 — Escrever os testes do grupo (mínimo 8 novos):** Criação de novos testes unitários com JUnit 5 (padrão Arrange-Act-Assert) para atingir os requisitos de qualidade e complementar os 33 testes já fornecidos.
-- [ ] **ETAPA 9 — Documentar e empacotar:** Preenchimento do `README.md`, exclusão de pastas de compilação (`target/`, `.class`), validação final em pasta limpa e empacotamento do projeto em `.zip`.
+- [x] **ETAPA 5 — Exceções, validações e algoritmos recursivos:** Codificação de exceções customizadas (`PacienteNaoEncontradoException`, `MedicoNaoInformadoException`), regras de `SinaisVitais`, e implementação dos algoritmos recursivos `Busca.buscaBinariaRecursiva()` e `Ordenacao.mergeSort()`.
+- [x] **ETAPA 6 — Regras de negócio (servico/UpaService):** Orquestração do sistema integrando o cadastro, triagem, chamadas médicas e geração de relatórios estatísticos, respeitando o Princípio de Responsabilidade Única (SRP) sem uso de saídas no console.
+- [x] **ETAPA 7 — Interface de linha de comando (cli/MenuCli):** Desenvolvimento das interações e telas do terminal (opções 2, 3, 5, 6 e 7), garantindo a robustez do programa contra entradas inválidas de dados.
+- [x] **ETAPA 8 — Escrever os testes do grupo (mínimo 8 novos):** Criação de novos testes unitários com JUnit 5 (padrão Arrange-Act-Assert) para atingir os requisitos de qualidade e complementar os testes fornecidos.
+- [x] **ETAPA 9 — Documentar e empacotar:** Preenchimento completo do `README.md`, exclusão de pastas de compilação (`target/`, `.class`), validação final em pasta limpa e empacotamento do projeto em `.zip`.
+
 ---
 
 ## 🖼️ Arquitetura e Representações Visuais
 
-### Fluxo do Paciente
+### Estrutura de Diretórios do Projeto
+
 ```text
-  upa-fila/
-  ├── pom.xml ← dependências (JUnit 5) e build Maven
-  ├── README.md ← MODELO: preencham (obrigatório)
-  ├── executar.bat / executar.sh ← compila e roda SEM Maven
-  └── src/
+upa-fila/
+├── pom.xml                                   # Dependências (JUnit 5) e configuração de build Maven
+├── README.md                                 # Documentação completa da sistematização
+├── executar.bat / executar.sh                # Scripts para compilar e rodar via terminal
+└── src/
     ├── main/java/br/ceub/poo/upa/
-    │ ├── App.java PRONTO monta as dependências e inicia o menu
-    │ ├── cli/ Console PRONTO leitura segura do teclado
-    │ │ MenuCli PARCIAL opções 1 e 4 prontas; 2,3,5,6,7 TODO
-    │ ├── modelo/ Pessoa, Profissional PRONTO (modelos de referência)
-    │ │ Prioridade, StatusPaciente, Triagem PRONTO
-    │ │ Paciente, Medico, Enfermeiro, Atendimento TODO
-    │ │ SinaisVitais PARCIAL (validações)
-    │ ├── triagem/ ClassificadorRisco PRONTO (interface)
-    │ │ ClassificadorManchesterSimplificado TODO
-    │ ├── estrutura/ No, Colecao, Fila PRONTO (Fila é o MODELO)
-    │ │ FilaPrioridade, Pilha TODO
-    │ ├── algoritmo/ Busca, Ordenacao PARCIAL (sequencial e insertion prontos)
-    │ ├── servico/ UpaService PARCIAL
-    │ ├── repositorio/ PacienteRepository(+Memoria) PRONTO
-    │ ├── observador/ ObservadorChamada, PainelChamada PRONTO
-    │ ├── excecao/ 6 exceções 5 PRONTAS, 1 TODO
-    │ └── util/ GeradorSenha PRONTO; ValidadorCpf TODO
-    └── test/java/br/ceub/poo/upa/ 33 testes (31 do professor + 2 exemplos)
+    │   ├── App.java                          # Ponto de entrada (main): monta injeções e inicia o menu
+    │   ├── cli/
+    │   │   ├── Console.java                  # Utilitário de leitura segura do teclado
+    │   │   └── MenuCli.java                  # Interface textual de interação com o usuário
+    │   ├── modelo/
+    │   │   ├── Pessoa.java                   # Classe abstrata base
+    │   │   ├── Profissional.java             # Especialização abstrata de Pessoa
+    │   │   ├── Medico.java                   # Profissional com consultório
+    │   │   ├── Enfermeiro.java               # Profissional responsável pela triagem
+    │   │   ├── Paciente.java                 # Entidade do paciente (Comparable por prioridade e chegada)
+    │   │   ├── Triagem.java                  # Registro clínico e classificação de risco
+    │   │   ├── SinaisVitais.java             # Dados vitais aferidos e suas validações
+    │   │   ├── Prioridade.java               # Enum com as cores e tempos do Protocolo de Manchester
+    │   │   ├── StatusPaciente.java           # Enum de estados do paciente no fluxo
+    │   │   └── Atendimento.java              # Registro do atendimento médico concluído
+    │   ├── triagem/
+    │   │   ├── ClassificadorRisco.java       # Interface (Strategy)
+    │   │   └── ClassificadorManchesterSimplificado.java # Implementação das regras clínicas
+    │   ├── estrutura/
+    │   │   ├── No.java                       # Elemento nó das estruturas encadeadas
+    │   │   ├── Colecao.java                  # Interface genérica de coleção
+    │   │   ├── Fila.java                     # Fila FIFO encadeada
+    │   │   ├── FilaPrioridade.java           # Fila de prioridade com inserção ordenada
+    │   │   └── Pilha.java                    # Pilha LIFO encadeada
+    │   ├── algoritmo/
+    │   │   ├── Busca.java                    # Busca linear e Busca Binária recursiva
+    │   │   └── Ordenacao.java                # Insertion sort e Merge Sort recursivo
+    │   ├── servico/
+    │   │   └── UpaService.java               # Camada de negócio e orquestração do fluxo da UPA
+    │   ├── repositorio/
+    │   │   ├── PacienteRepository.java       # Interface de repositório
+    │   │   └── PacienteRepositoryMemoria.java# Implementação em memória com Array dinâmico
+    │   ├── observador/
+    │   │   ├── ObservadorChamada.java        # Interface do padrão Observer
+    │   │   └── PainelChamada.java            # Painel observador que exibe chamadas
+    │   ├── excecao/
+    │   │   ├── UpaException.java             # Exceção base do sistema
+    │   │   ├── CpfInvalidoException.java
+    │   │   ├── FilaVaziaException.java
+    │   │   ├── MedicoNaoInformadoException.java # Criada pelo grupo para validação de chamada
+    │   │   ├── PacienteDuplicadoException.java
+    │   │   ├── PacienteNaoEncontradoException.java
+    │   │   └── SinaisVitaisInvalidosException.java
+    │   └── util/
+    │       ├── GeradorSenha.java             # Gerador de senhas sequenciais
+    │       └── ValidadorCpf.java             # Validação matemática dos dígitos do CPF
+    └── test/java/br/ceub/poo/upa/            # Suíte com 47 testes unitários (JUnit 5)
 ```
 
+> **Observação sobre classes criadas pelo grupo além do esqueleto:**
+> Além de implementar todos os métodos e classes marcados como `TODO` no esqueleto (`Paciente`, `Medico`, `Enfermeiro`, `Atendimento`, `ValidadorCpf`, `ClassificadorManchesterSimplificado`, `FilaPrioridade`, `Pilha`, `Busca` binária, `Ordenacao` merge sort, `UpaService` e `MenuCli`), o grupo criou a classe de exceção personalizada **`MedicoNaoInformadoException`** (`br.ceub.poo.upa.excecao.MedicoNaoInformadoException`) para garantir consistência no disparo de chamadas médicas sem médico associado, além de testes adicionais para cobertura de casos de borda.
+
 ### Diagrama de Classes (Simplificado)
+
 ```text
                     «abstract» Pessoa
                     - nome, cpf, dataNascimento
@@ -119,42 +174,60 @@ O desenvolvimento deste sistema foi estruturado de forma sequencial, conforme o 
   MenuCli ──usa──► UpaService ──usa──► ClassificadorRisco, PacienteRepository,
                                        Fila, FilaPrioridade, Pilha, ObservadorChamada
 ```
+
 ---
 
 ## 📦 Instalação e Configuração Local
 
-### 1. Clonar o Repositório e Entrar na Pasta
+### 1. Obtenção do Código-Fonte
+
+**Via Git:**
 ```bash
-git clone [https://github.com/Sistematizacao-Ceub/sistema-gerenciamento-fila-pacientes-upa.git](https://github.com/Sistematizacao-Ceub/sistema-gerenciamento-fila-pacientes-upa.git)
+git clone https://github.com/Sistematizacao-Ceub/sistema-gerenciamento-fila-pacientes-upa.git
 cd sistema-gerenciamento-fila-pacientes-upa
 ```
+
+**Via Arquivo Compactado (.zip):**
+1. Descompacte o arquivo `.zip` em uma pasta de sua preferência.
+2. Abra o terminal nessa pasta:
 ```bash
-# 1. Descompacte o arquivo .zip
-# 2. Entre na pasta do projeto
 cd sistema-gerenciamento-fila-pacientes-upa
 ```
+
+### 2. Importação na IDE (IntelliJ IDEA)
+
+1. Abra o **IntelliJ IDEA**.
+2. Clique em **File** $\rightarrow$ **Open...** (ou *Open* na tela de boas-vindas).
+3. Navegue até a pasta do projeto e selecione o arquivo **`pom.xml`** (ou a pasta raiz do projeto) e clique em **OK**.
+4. Selecione a opção **Open as Project**.
+5. Verifique a versão do JDK configurada:
+   * Vá em **File** $\rightarrow$ **Project Structure** $\rightarrow$ **Project**.
+   * Em **SDK**, selecione **Java 17** (ou superior).
+   * Em **Language level**, selecione **17 - Sealed types, always-strict floating-point, etc.**.
+6. Aguarde o IntelliJ sincronizar as dependências do Maven (o painel lateral do Maven mostrará as tarefas e o JUnit 5 disponível).
 
 ---
 
-## ▶️ Como executar
+## ▶️ Como Executar
 
-**Opção A — sem Maven (só JDK):**
+**Opção A — Sem Maven (Apenas JDK instalado):**
 
 ```bash
-# Windows: dê dois cliques em executar.bat  (ou rode no terminal:)
+# No Windows (prompt de comando ou PowerShell):
 executar.bat
 
-# Linux / macOS:
+# No Linux ou macOS:
+chmod +x executar.sh
 ./executar.sh
 ```
 
-**Opção B — com Maven:**
+**Opção B — Diretamente com Maven:**
 
 ```bash
 mvn compile exec:java
 ```
 
-**Opção C — gerar e rodar o .jar:**
+**Opção C — Gerando e executando o arquivo .jar:**
 
 ```bash
 mvn package
@@ -163,21 +236,62 @@ java -jar target/upa-fila-1.0.jar
 
 ---
 
-## 🧪 Como rodar os testes
+## 🧪 Como Rodar os Testes
+
+Para executar toda a suíte de testes unitários automatizados com o Maven:
 
 ```bash
 mvn test
 ```
 
+### Resultado Obtido pela Equipe
+
+```text
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 47, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] BUILD SUCCESS
+```
+
+* **Total de testes:** 47 testes
+* **Passando:** 47
+* **Falhando:** 0
+* **Ignorados/Pulados:** 0
+
+*(31 testes originais fornecidos pela disciplina + 16 testes adicionais implementados pelo grupo para validação de casos limites e robustez).*
+
 ---
 
-## 🎬 Roteiro de demonstração
+## 🎬 Roteiro de Demonstração
 
-1. Opção 1 → cadastre "Ana", CPF `529.982.247-25`
-2. Opção 1 → cadastre "Bruno", CPF `111.444.777-35`
-3. Opção 2 → triagem da Ana com sinais normais → **AZUL**
-4. Opção 2 → triagem do Bruno com SpO2 = 85 → **VERMELHO**
-5. Opção 4 → Bruno aparece **na frente** da Ana, mesmo tendo chegado depois
-6. Opção 3 → chama o Bruno; o painel mostra a senha e o consultório
+Para validar rapidamente as principais regras de negócio do sistema:
+
+1. **Opção 1:** Cadastre a paciente `"Ana"`, CPF `529.982.247-25`.
+2. **Opção 1:** Cadastre o paciente `"Bruno"`, CPF `111.444.777-35`.
+3. **Opção 2:** Realize a triagem da **Ana** com sinais vitais normais $\rightarrow$ Classificação **AZUL**.
+4. **Opção 2:** Realize a triagem do **Bruno** com saturação $\text{SpO}_2 = 85\%$ $\rightarrow$ Classificação **VERMELHO** (Emergência).
+5. **Opção 4:** Visualize a fila de atendimento. Note que **Bruno aparece na frente de Ana**, mesmo tendo chegado depois, devido à gravidade clínica.
+6. **Opção 3:** Chame o próximo paciente. O painel exibirá a chamada prioritária de Bruno com indicação do médico e consultório.
+7. **Opção 5 e 6:** Realize a busca por CPF/Senha e consulte os relatórios de atendimento e tempos de espera.
 
 ---
+
+## ⚠️ Limitações Conhecidas
+
+1. **Persistência Volátil em Memória:** Todos os cadastros, históricos e atendimentos são mantidos exclusivamente em memória durante a execução. Ao finalizar o programa, os dados são reiniciados (ausência de banco de dados relacional persistente).
+2. **Interface Exclusivamente em Linha de Comando (CLI):** O sistema opera via terminal texto, não possuindo interface gráfica para os pacientes ou painel eletrônico web/televisivo.
+3. **Reclassificação Dinâmica de Risco:** A prioridade do paciente é estabelecida no momento da triagem clínica; o sistema não possui mecanismo de decaimento ou aumento dinâmico automático de prioridade por tempo excessivo de espera além dos relatórios gerados.
+4. **Concorrência:** O software foi projetado para execução em ambiente monothread no terminal, sem suporte a múltiplos operadores simultâneos concorrentes via rede.
+
+---
+
+## 🤖 Declaração de Uso de Ferramentas de IA
+
+Durante o desenvolvimento deste trabalho, o grupo utilizou ferramentas de Inteligência Artificial Generativa (Google Gemini e ChatGPT) com propósitos estritamente auxiliares e pedagógicos, atuando nas seguintes frentes:
+
+* **Tira-dúvidas conceituais:** Consulta sobre particularidades de sintaxe da linguagem Java 17, padrões de projeto (*Strategy* e *Observer*) e funcionamento de algoritmos recursivos (*Merge Sort* e Busca Binária).
+* **Geração de cenários de teste:** Apoio na ideação de casos de borda para testes unitários com JUnit 5 (como sinais vitais limítrofes e listas de pacientes com prioridades idênticas para validação do critério de desempate).
+* **Revisão e formatação da documentação:** Estruturação visual e diagramação deste arquivo `README.md` no padrão Markdown e Mermaid.
+
+> **Garantia de Autoria:** Todo o código-fonte gerado, arquitetura das classes, resolução dos algoritmos e testes passaram por análise crítica, validação e adaptação manual por todos os integrantes do grupo, assegurando total domínio sobre a solução entregue.

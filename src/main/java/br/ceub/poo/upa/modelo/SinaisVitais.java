@@ -53,11 +53,30 @@ public class SinaisVitais {
             throw new SinaisVitaisInvalidosException(
                     "Temperatura fora da faixa (30.0–45.0 °C): " + temperatura);
         }
-        // TODO: validar frequenciaCardiaca
-        // TODO: validar pressaoSistolica
-        // TODO: validar pressaoDiastolica (faixa E menor que a sistólica)
-        // TODO: validar saturacaoO2
-        // TODO: validar dor
+        if (frequenciaCardiaca < 20 || frequenciaCardiaca > 250) {
+            throw new SinaisVitaisInvalidosException(
+                    "Frequência Cardíaca fora da faixa permitida (20-250 bpm): " + frequenciaCardiaca);
+        }
+        if (pressaoSistolica < 40 || pressaoSistolica > 300) {
+            throw new SinaisVitaisInvalidosException(
+                    "Pressão Sistólica fora da faixa (40-300 mmHg): " + pressaoSistolica);
+        }
+        if (pressaoDiastolica < 20 || pressaoDiastolica > 200) {
+            throw new SinaisVitaisInvalidosException(
+                    "Pressão Diastólica fora da faixa (20-200 mmHg): " + pressaoDiastolica);
+        }
+        if (pressaoDiastolica >= pressaoSistolica) {
+            throw new SinaisVitaisInvalidosException(
+                    "Pressão Diastólica deve ser menor que a Sistólica: " + pressaoSistolica + "/" + pressaoDiastolica);
+        }
+        if (saturacaoO2 < 50 || saturacaoO2 > 100) {
+            throw new SinaisVitaisInvalidosException(
+                    "Saturação O2 fora da faixa (50-100 % ): " + saturacaoO2);
+        }
+        if (dor < 0 || dor > 10) {
+            throw new SinaisVitaisInvalidosException(
+                    "Dor fora da faixa (0-10 % ): " + dor);
+        }
     }
 
     public double getTemperatura() { return temperatura; }
@@ -72,6 +91,6 @@ public class SinaisVitais {
     public String toString() {
         return String.format("T=%.1f°C | FC=%d bpm | PA=%d/%d mmHg | SpO2=%d%% | Dor=%d/10 | %s",
                 temperatura, frequenciaCardiaca, pressaoSistolica, pressaoDiastolica,
-                saturacaoO2, dor, consciente ? "consciente" : "INCONSCIENTE");
+                saturacaoO2, dor, consciente ? "Consciente" : "Inconsciente");
     }
 }

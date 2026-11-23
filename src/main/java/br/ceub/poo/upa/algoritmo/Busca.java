@@ -50,7 +50,18 @@ public final class Busca {
      */
     private static <T> int buscaBinariaRecursiva(List<T> lista, int chave, ToIntFunction<T> extratorChave,
                                                  int inicio, int fim) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: Busca.buscaBinariaRecursiva()");
+        if (inicio > fim) {
+            return -1;
+        }
+        int meio = inicio + (fim - inicio) / 2;
+        int valorMeio = extratorChave.applyAsInt(lista.get(meio));
+        if (valorMeio == chave) {
+            return meio;
+        }
+        if (chave < valorMeio) {
+            return buscaBinariaRecursiva(lista, chave, extratorChave, inicio, meio - 1);
+        } else {
+            return buscaBinariaRecursiva(lista, chave, extratorChave, meio + 1, fim);
+        }
     }
 }

@@ -1,19 +1,20 @@
 package br.ceub.poo.upa.cli;
 
+import br.ceub.poo.upa.excecao.CpfInvalidoException;
 import br.ceub.poo.upa.excecao.FilaVaziaException;
+import br.ceub.poo.upa.excecao.MedicoNaoInformadoException;
 import br.ceub.poo.upa.excecao.UpaException;
 import br.ceub.poo.upa.modelo.Atendimento;
 import br.ceub.poo.upa.modelo.Enfermeiro;
 import br.ceub.poo.upa.modelo.Medico;
 import br.ceub.poo.upa.modelo.Paciente;
-import br.ceub.poo.upa.modelo.Prioridade;
 import br.ceub.poo.upa.modelo.SinaisVitais;
 import br.ceub.poo.upa.modelo.Triagem;
 import br.ceub.poo.upa.servico.UpaService;
+import br.ceub.poo.upa.util.ValidadorCpf;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface de linha de comando (CLI). Responsabilidade ÚNICA: conversar com o usuário
@@ -118,8 +119,19 @@ public class MenuCli {
      */
     private void realizarTriagem() throws UpaException {
         System.out.println("\n--- TRIAGEM (" + enfermeiroPlantao.getIdentificacao() + ") ---");
-        // TODO
-        throw new UnsupportedOperationException("MenuCli.realizarTriagem()");
+        System.out.println(" Próximo: " + servico.proximoParaTriagem().getIdentificacao());
+        String queixa = console.lerTexto("Queixa principal");
+        double temperatura = console.lerDecimal("Temperatura [30.0–45.0 °C]");
+        int frequenciaCardiaca = console.lerInteiro("Frequência Cardíaca", 20, 250);
+        int pressaoSistolica = console.lerInteiro("PA Sistólica", 40, 300);
+        int pressaoDiastolica = console.lerInteiro("PA Diastólica", 20, 200);
+        int saturacaoO2 = console.lerInteiro("Saturação O2 (%)", 50, 100);
+        int dor = console.lerInteiro("Dor", 0, 10);
+        boolean consciente = console.lerSimNao("Consciente?");
+        SinaisVitais sinaisVitais = new SinaisVitais(temperatura, frequenciaCardiaca, pressaoSistolica, pressaoDiastolica, saturacaoO2, dor, consciente);
+        Triagem triagem = servico.triarProximo(enfermeiroPlantao, sinaisVitais, queixa);
+        System.out.println("\n[OK] Classificação: " + triagem.getPrioridade());
+        exibirEstatisticas();
     }
 
     // ---------------------------------------------------------------- 3
@@ -132,10 +144,14 @@ public class MenuCli {
      *     (o PainelChamada — observador — imprime o painel sozinho!)
      *  4. Mostre o tempo de espera e se foi dentro do prazo da cor.
      */
-    private void chamarProximo() {
+    private void chamarProximo() throws MedicoNaoInformadoException {
         System.out.println("\n--- CHAMAR PRÓXIMO PACIENTE ---");
-        // TODO
-        throw new UnsupportedOperationException("MenuCli.chamarProximo()");
+        for (int i = 0; i < medicosPlantao.size(); i++) {
+            System.out.printf("%d - %s%n", i + 1, medicosPlantao.get(i).getIdentificacao());
+        }
+        int escolha = console.lerInteiro("Escolha um médico", 1, medicosPlantao.size());
+        Atendimento atendimento = servico.chamarProximo(medicosPlantao.get(escolha - 1));
+        System.out.printf("%nTempo de espera: %d min | %s%n", atendimento.getTempoEsperaMin(), atendimento.isDentroDoPrazo() ? "Dentro do prazo da cor." : "Fora do prazo da cor.");
     }
 
     // ---------------------------------------------------------------- 4 (JÁ IMPLEMENTADO: modelo)
@@ -172,8 +188,34 @@ public class MenuCli {
      */
     private void buscarPaciente() throws UpaException {
         System.out.println("\n--- BUSCAR PACIENTE ---");
-        // TODO
-        throw new UnsupportedOperationException("MenuCli.buscarPaciente()");
+        int filtro = console.lerInteiro("Buscar por (1-CPF / 2-Senha)", 1, 2);
+        if (filtro == 1) {
+            String cpf = console.lerTexto("Digite o CPF do paciente [XXX.XXX.XXX-XX]");
+            if(!ValidadorCpf.isValido(cpf)) throw new CpfInvalidoException(cpf);
+            Paciente paciente = servico.buscarPorCpf(cpf);
+            System.out.printf("%n%s, %d, %s, %s%n",
+                    paciente.getIdentificacao(),
+                    paciente.getIdade(),
+                    paciente.getStatus().name(),
+                    paciente.getTriagem() != null ? paciente.getTriagem() : "Não passou pela triagem" );
+        } else {
+            String senha = console.lerTexto("Digite a senha do paciente [ex.: P007 ou 007]")
+                    .trim()
+                    .toUpperCase();
+            if (senha.startsWith("P")) {
+                senha = senha.substring(1);
+            }
+            if (!senha.matches("\\d+")) {
+                System.out.println("[ERRO] Senha inválida.");
+                return;
+            }
+            Paciente paciente = servico.buscarPorSenha(Integer.parseInt(senha));
+            System.out.printf("%n%s, %d, %s, %s%n",
+                    paciente.getIdentificacao(),
+                    paciente.getIdade(),
+                    paciente.getStatus().name(),
+                    paciente.getTriagem() != null ? paciente.getTriagem() : "Não passou pela triagem" );
+        }
     }
 
     // ---------------------------------------------------------------- 6
@@ -185,8 +227,15 @@ public class MenuCli {
      */
     private void exibirRelatorios() {
         System.out.println("\n--- RELATÓRIOS ---");
-        // TODO
-        throw new UnsupportedOperationException("MenuCli.exibirRelatorios()");
+        int filtro = console.lerInteiro("Exibir relatório (1-Últimos 5 atendimentos / 2-Ordenado por tempo de espera)", 1, 2);
+        List<Atendimento> atendimentos = filtro == 1 ?
+                servico.ultimosAtendimentos(5) :
+                servico.relatorioPorTempoEspera();
+        if (atendimentos.isEmpty()) {
+            System.out.println("Nenhum atendimento encontrado.");
+            return;
+        }
+        atendimentos.forEach(System.out::println);
     }
 
     // ---------------------------------------------------------------- 7
@@ -198,7 +247,9 @@ public class MenuCli {
      */
     private void exibirEstatisticas() {
         System.out.println("\n--- ESTATÍSTICAS DO PLANTÃO ---");
-        // TODO
-        throw new UnsupportedOperationException("MenuCli.exibirEstatisticas()");
+        servico.contarPorPrioridade().forEach((prioridade, quantidade) -> {
+            System.out.printf("%-8s | %-10s %d%n", prioridade.name(), quantidade > 10 ? "+" : "*".repeat(quantidade), quantidade);
+        });
+        System.out.printf("Tempo médio de espera: %.1f min%n", servico.tempoMedioEsperaMin());
     }
 }
